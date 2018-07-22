@@ -14,6 +14,12 @@ namespace FChart.Chart
     /// </summary>
     public class FCBlock : FCObject
     {
+        //
+        // RealPos>Location +off
+        // Location>RealPos -off
+        //
+
+
         public FCBlock(ChartDrawer parent)
         {
             Parent = parent;
@@ -56,6 +62,12 @@ namespace FChart.Chart
         public bool Editing { get; private set; }
 
         private SolidBrush brush { get; set; }
+        private int xl = 0;
+        private int xc = 0;
+        private int xr = 0;
+        private int yt = 0;
+        private int yc = 0;
+        private int yb = 0;
 
         protected int notEnteredAlpha = 100;
         protected bool pinTop = false, pinBottom = false, pinLeft = false, pinRight = false;
@@ -188,6 +200,7 @@ namespace FChart.Chart
 
 
 
+
         protected virtual void OnKeyDown(Keys k, bool atl, bool ctl, bool shift)
         {
 
@@ -257,9 +270,15 @@ namespace FChart.Chart
                             break;
                     }
                     if (!resizeTargetPos.IsEmpty)
+                    {
+                        resizeTargetPos = Parent.onMoveBlockCheckLineXY(resizeTargetPos, this);
                         Location = resizeTargetPos;
+                    }
                     if (!resizeTargetSize.IsEmpty)
+                    {
+                        resizeTargetSize = Parent.onMoveBlockCheckLineWH(Location, resizeTargetSize, this);
                         Size = resizeTargetSize;
+                    }
                     Invalidate();
                 }
                 else
@@ -347,8 +366,8 @@ namespace FChart.Chart
         public bool IsMouseInSizeing(Point mousePoint, Point moveOffest)
         {
             Point mousePointClient = new Point();
-            mousePointClient.X = mousePoint.X - moveOffest.X - Left;
-            mousePointClient.Y = mousePoint.Y - moveOffest.Y - Top;
+            mousePointClient.X = mousePoint.X + moveOffest.X - Left;
+            mousePointClient.Y = mousePoint.Y + moveOffest.Y - Top;
             if (mousePointClient.X > 0 && mousePointClient.X < SIZE_BORDER && mousePointClient.Y > SIZE_BORDER && mousePointClient.Y < Height - SIZE_BORDER)
             {
                 Sizeing = true;
@@ -472,7 +491,7 @@ namespace FChart.Chart
         #region ReSize
 
         //调整大小的类型
-        private enum SizeType
+        public enum SizeType
         {
             None,
             TopLeft,
@@ -494,6 +513,9 @@ namespace FChart.Chart
         Point resizeTargetPos = new Point();
         Size resizeTargetSize = new Size();
         SizeType SizeDre = SizeType.None;
+
+        public SizeType SizeingType { get { return SizeDre; } }
+
         //调整大小的边距
         //鼠标距离边框<SIZE_BORDER大小就认为可以调节大小
         const int SIZE_BORDER = 5;
@@ -503,6 +525,48 @@ namespace FChart.Chart
 
         #endregion
 
+        protected override void OnLocationChanged()
+        {
+            UpdateAllCheckLines(true);
+            base.OnLocationChanged();
+        }
+        protected override void OnSizeChanged()
+        {
+            UpdateAllCheckLines(false);
+            base.OnSizeChanged();
+        }
+
+        private void UpdateAllCheckLines(bool xy)
+        {
+            /*
+            if (xy)
+            {
+                if (Parent.checkLineXL.Contains(xl)) Parent.checkLineXL.Remove(xl);
+                if (Parent.checkLineYT.Contains(yt)) Parent.checkLineYT.Remove(yt);
+
+                xl = Left;
+                yt = Top;
+
+                if (!Parent.checkLineXL.Contains(xl)) Parent.checkLineXL.Add(xl);
+                if (!Parent.checkLineYT.Contains(yt)) Parent.checkLineYT.Add(yt);
+            }
+
+            if (Parent.checkLineXR.Contains(xr)) Parent.checkLineXR.Remove(xr);
+            if (Parent.checkLineYB.Contains(yb)) Parent.checkLineYB.Remove(yb);
+            if (Parent.checkLineXC.Contains(xc)) Parent.checkLineXC.Remove(xc);
+            if (Parent.checkLineYC.Contains(yc)) Parent.checkLineYC.Remove(yc);
+
+            xr = Left + Width;
+            yb = Top + Height;
+            xc = Left + Width / 2;
+            yc = Top + Height / 2;
+
+            if (!Parent.checkLineXR.Contains(xr)) Parent.checkLineXR.Add(xr);
+            if (!Parent.checkLineYB.Contains(yb)) Parent.checkLineYB.Add(yb);
+            if (!Parent.checkLineXC.Contains(xc)) Parent.checkLineXC.Add(xc);
+            if (!Parent.checkLineYC.Contains(yc)) Parent.checkLineYC.Add(yc);
+            */
+        }
     }
 
     public enum FCPintDirection

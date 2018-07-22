@@ -101,19 +101,19 @@ namespace FChart.Chart
 
         public void SetWidth(int width)
         {
-            _Size.Width = width;
+            _Size.Width = width; OnSizeChanged();
         }
         public void SetHeight(int height)
         {
-            _Size.Height = height;
+            _Size.Height = height; OnSizeChanged();
         }
         public void SetX(int x)
         {
-            _Location.X = x;
+            _Location.X = x; OnLocationChanged();
         }
         public void SetY(int y)
         {
-            _Location.Y = y;
+            _Location.Y = y; OnLocationChanged();
         }
         [Description("块以矩形表示的位置和大小")]
         [Category("位置")]

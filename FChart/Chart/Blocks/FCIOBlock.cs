@@ -19,7 +19,7 @@ namespace FChart.Chart.Blocks
             borderPen = new Pen(Color.FromArgb(notEnteredAlpha, 30, 160, 125), 2);
             fillBrush = new SolidBrush(Color.FromArgb(255, 255, 255));
             BlockType = FCBlockType.BlockIO;
-            redrawPadding = new Padding(16, 2, 16, 2);
+            redrawPadding = new Padding(10, 2, 10, 2);
             OnLocationChanged();
         }
 
@@ -73,8 +73,8 @@ namespace FChart.Chart.Blocks
         {
             base.OnLocationChanged();
             int off = Size.Height / 10;
-            redrawPadding.Left = off + 2;
-            redrawPadding.Right = off + 2;
+            redrawPadding.Left = off + 10;
+            redrawPadding.Right = off + 20;
             points[0] = new Point(Location.X + off, Location.Y);
             points[1] = new Point(Location.X + off + Size.Width, Location.Y);
             points[3] = new Point(Location.X - off, Location.Y + Size.Height);
